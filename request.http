@@ -1,0 +1,87 @@
+
+### POST Register
+POST  http://localhost:4040/api/auth/register
+Content-Type: application/json
+
+{
+    "username":"trung",
+    "email":"trung@gmail.com",
+    "password":"trung"
+}
+
+
+### POST Login
+POST  http://localhost:4040/api/auth/login
+Content-Type: application/json
+
+{
+    "email":"admin@gmail.com",
+    "password":"admin"
+}
+
+### POST Create posts
+POST http://localhost:4040/api/posts/create
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MDczMWJmMjJiODVjNDJmNWM5NzdiMmIiLCJpYXQiOjE2MTgxNjE1NTZ9.d3-ZRF370ClxavehTcLTy6hGFTxroxeVuleDrnvCRv8
+
+{
+    "title":"VUE js",
+    "description":"làm quen với vue js",
+    "url":"vue.org.com",
+    "image":"123.jpg",
+    "speciesId":["60702a33a30b0f265c92b4f2"]
+   
+}
+
+### GET POSTS
+GET http://localhost:4040/api/posts
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MDZmMmRhZWU2YWE2OTA3MDQyYWJlNWIiLCJpYXQiOjE2MTc4OTg5MzB9.tl2D9U5wRupRGJP6HJb4Glk8R0jb9pHzwuYrJt-LO30
+
+
+### UPDATE POSTS
+PUT http://localhost:4040/api/posts/606f2ddde6aa6907042abe5c
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MDZmMmRhZWU2YWE2OTA3MDQyYWJlNWIiLCJpYXQiOjE2MTc4OTg5MzB9.tl2D9U5wRupRGJP6HJb4Glk8R0jb9pHzwuYrJt-LO30
+
+{
+    "titel":"javajs",
+    "description":"javajs",
+    "url":"javajs.org.com",
+    
+    
+}
+
+
+### DELETE POSTS
+DELETE  http://localhost:4040/api/posts/606f2ddde6aa6907042abe5c
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MDZmMmRhZWU2YWE2OTA3MDQyYWJlNWIiLCJpYXQiOjE2MTc4OTg5MzB9.tl2D9U5wRupRGJP6HJb4Glk8R0jb9pHzwuYrJt-LO30
+
+
+### POST speciesPOST
+POST http://localhost:4040/api/posts/postspecies
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MDczMWU4MmY4ZDEyMTM0MDhkMjdkZjgiLCJpYXQiOjE2MTgxNTcyMDF9.rvs5VPJTDQ351jxHUafKKSpKNJrCH2C7avBC1zNU86M
+
+{
+    "species":"JavaSctript",
+    "description":"javajs"
+}
+
+### PATCH Comment 
+PATCH http://localhost:4040/api/posts/60727a7f3c674c1ae86169df
+Content-Type: : application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MDZmMmRhZWU2YWE2OTA3MDQyYWJlNWIiLCJpYXQiOjE2MTgxMTQ5MzR9.KFB8Pv5k_kNbjlG9be3j0Mk-K8Y7zYTExG8rnYS7lmo
+
+{
+    "comments":[
+        {
+            "content":"hello ban trung",
+            "IdUserComment":"606f2daee6aa6907042abe5b"
+        }
+    ]
+}
+
+
+### GET DATA BY USER 
+GET http://localhost:4040/api/posts/posts-by-user/606f2daee6aa6907042abe5b
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MDczMWJmMjJiODVjNDJmNWM5NzdiMmIiLCJpYXQiOjE2MTgxNjE1NTZ9.d3-ZRF370ClxavehTcLTy6hGFTxroxeVuleDrnvCRv8
