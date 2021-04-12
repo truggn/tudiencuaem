@@ -1,7 +1,6 @@
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema
-var moment = require('moment'); // require
-var now = moment();
+mongoose.set('useFindAndModify', false);
 
 const postSchema = new Schema({
     title: {
@@ -35,9 +34,9 @@ const postSchema = new Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'speciesposts'
     }],
-    deleteAt: { type: String, default: now.format('YYYY/MM/DD') },
-    createAt: { type: String, default: now.format('YYYY/MM/DD') },
-    updateAt: { type: String, default: now.format('YYYY/MM/DD') },
+    deleteAt: { type: Date, default: null },
+    createAt: { type: Date, default: Date.now },
+    updateAt: { type: Date, default: null },
 
 
 }, {

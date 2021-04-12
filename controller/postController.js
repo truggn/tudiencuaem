@@ -83,8 +83,8 @@ class postController {
     }
     // PUT POSTS
     async putPosts(req, res) {
-        const { titel, description, url } = req.body
-        if (!titel) {
+        const { title, description, url, image } = req.body
+        if (!title) {
             return res.status(400).json({
                 success: false,
                 message: "Vui lòng điền Tiêu đề Bài đăng."
@@ -98,11 +98,14 @@ class postController {
         }
         try {
             let updatedPost = {
-                titel,
+                title,
                 description: description || '',
                 url: (url.startsWith('https://') ? url : `https://${url}`) || '',
+                image,
+                status: 'NOOP'
             }
-            updatedPost = await Post.findOneAndUpdate({ _id: req.params.id, user: req.userId }, updatedPost, { new: true })
+            const postsUpdateCondition = { _id: req.params.id, userId: req.userId }
+            updatedPost = await Post.findOneAndUpdate(postsUpdateCondition, updatedPost, { new: true })
 
             //check user , user authorised to update 
             if (!updatedPost) {
@@ -114,10 +117,8 @@ class postController {
             return res.status(200).json({
                 success: true,
                 data: updatedPost,
-                message: "Cập nhật bài đăng thành công."
+                message: "Cập nhật bài đăng thành công. Vui lòng đợi admin duyệt bài."
             })
-
-
         } catch (error) {
             console.log(error)
             return res.status(500).json({
@@ -194,11 +195,10 @@ class postController {
         const { speciesId } = req.body
         const data = await PostSpecies.findOne({})
     };
-    // LOAD BÀI ĐĂNG THEO UserId
+    // LOAD BÀI ĐĂNG THEO NGƯỜI ĐĂNG
     async loadPostsById(req, res, next) {
         try {
-            const result = await Post.find({ userId: req.userId })
-            console.log(req.userId)
+            const result = await Post.findOne({ userId: req.userId })
             console.log(result)
             if (!result) {
                 return res.status(200).json({
@@ -206,12 +206,14 @@ class postController {
                     data: null,
                     message: 'Bạn chưa có bài đăng nào.'
                 })
+            } else {
+                return res.status(200).json({
+                    success: true,
+                    data: result,
+                    message: 'Tải bài đăng thành công.'
+                })
             }
-            return res.status(200).json({
-                success: true,
-                data: result,
-                message: 'Tải bài đăng thành công.'
-            })
+
         } catch (error) {
             console.log(error)
             return res.status(500).json({

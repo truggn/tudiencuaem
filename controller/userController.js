@@ -60,7 +60,7 @@ class userController {
             console.log(error)
             return res.status(500).json({
                 success: false,
-                message: " Internal Server Error"
+                message: "Lỗi khi thực hiện đăng ký, vui lòng thử lại."
             })
         }
 
@@ -97,9 +97,20 @@ class userController {
                     message: 'Sai mật khẩu.'
                 })
             }
+
+            // check open acount 
+            if (user.isLockAcount === true) {
+                return res.status(400).json({
+                    success: false,
+                    message: 'Tài khoản này hiện đang bị khóa.'
+                })
+            }
+
             const token = jwt.sign({ userId: user._id }, _CONF.secret)// , { expiresIn: _CONF.tokenLife }
             user.token = token
             await user.save()
+            // sau khi login thành công thì thực hiện chuyển sang trạng thái đang hoạt động.
+            // await User.findOneAndUpdate({ _id: user._id }, { status: true }, { new: true })
             return res.json({
                 success: true,
                 message: 'Đăng nhập thành công',
@@ -110,7 +121,7 @@ class userController {
             console.log(error)
             return res.status(500).json({
                 success: false,
-                message: " Internal Server Error"
+                message: "Lỗi khi thực hiện đăng nhập, Vui lòng thử lại."
             })
         }
     }

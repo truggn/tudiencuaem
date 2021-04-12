@@ -4,9 +4,9 @@ POST  http://localhost:4040/api/auth/register
 Content-Type: application/json
 
 {
-    "username":"trung",
-    "email":"trung@gmail.com",
-    "password":"trung"
+    "username":"hoa",
+    "email":"hoa@gmail.com",
+    "password":"hoa"
 }
 
 
@@ -15,19 +15,20 @@ POST  http://localhost:4040/api/auth/login
 Content-Type: application/json
 
 {
-    "email":"admin@gmail.com",
-    "password":"admin"
+    "email":"hoa@gmail.com",
+    "password":"hoa"
 }
 
 ### POST Create posts
 POST http://localhost:4040/api/posts/create
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MDczMWJmMjJiODVjNDJmNWM5NzdiMmIiLCJpYXQiOjE2MTgxNjE1NTZ9.d3-ZRF370ClxavehTcLTy6hGFTxroxeVuleDrnvCRv8
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MDc0N2Q2ODVkZDk0YTNmZTQwZjNjZTQiLCJpYXQiOjE2MTgyNDcwMjl9.Jk5-vmCFL9wlORjbLZpoASKnf79RbaN66xwqBSkNj4o
+
 
 {
-    "title":"VUE js",
-    "description":"làm quen với vue js",
-    "url":"vue.org.com",
+    "title":"JavaScript_hoa",
+    "description":"làm quen với Javascript",
+    "url":"js.org.com",
     "image":"123.jpg",
     "speciesId":["60702a33a30b0f265c92b4f2"]
    
@@ -39,14 +40,16 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MDZmM
 
 
 ### UPDATE POSTS
-PUT http://localhost:4040/api/posts/606f2ddde6aa6907042abe5c
+PUT http://localhost:4040/api/posts/60747d915dd94a3fe40f3ce5
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MDZmMmRhZWU2YWE2OTA3MDQyYWJlNWIiLCJpYXQiOjE2MTc4OTg5MzB9.tl2D9U5wRupRGJP6HJb4Glk8R0jb9pHzwuYrJt-LO30
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MDc0N2Q2ODVkZDk0YTNmZTQwZjNjZTQiLCJpYXQiOjE2MTgyNDcwMjl9.Jk5-vmCFL9wlORjbLZpoASKnf79RbaN66xwqBSkNj4o
 
 {
-    "titel":"javajs",
-    "description":"javajs",
-    "url":"javajs.org.com",
+    "title":"java111",
+    "description":"java111",
+    "url":"java.org.com",
+    "image":"java.jpg",
+    "speciesId": "60702a33a30b0f265c92b4f2"
     
     
 }
@@ -57,7 +60,7 @@ DELETE  http://localhost:4040/api/posts/606f2ddde6aa6907042abe5c
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MDZmMmRhZWU2YWE2OTA3MDQyYWJlNWIiLCJpYXQiOjE2MTc4OTg5MzB9.tl2D9U5wRupRGJP6HJb4Glk8R0jb9pHzwuYrJt-LO30
 
 
-### POST speciesPOST
+### POST SPECIESPOST
 POST http://localhost:4040/api/posts/postspecies
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MDczMWU4MmY4ZDEyMTM0MDhkMjdkZjgiLCJpYXQiOjE2MTgxNTcyMDF9.rvs5VPJTDQ351jxHUafKKSpKNJrCH2C7avBC1zNU86M
@@ -83,5 +86,30 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MDZmM
 
 
 ### GET DATA BY USER 
-GET http://localhost:4040/api/posts/posts-by-user/606f2daee6aa6907042abe5b
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MDczMWJmMjJiODVjNDJmNWM5NzdiMmIiLCJpYXQiOjE2MTgxNjE1NTZ9.d3-ZRF370ClxavehTcLTy6hGFTxroxeVuleDrnvCRv8
+GET http://localhost:4040/api/posts/posts-by-user/607479c15dd94a3fe40f3ce2
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MDc0NzljMTVkZDk0YTNmZTQwZjNjZTIiLCJpYXQiOjE2MTgyNDYwOTR9.OauvKmOPI8HY2WEXoAcHAhUHF2WWjDWPYDV5ufWLR5M
+
+
+### @ PATCH LOCK ACOUNT
+PATCH http://localhost:4040/api/admin/lock-acount/6073f0e6e9eaef2960bc5b04
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MDczMWJmMjJiODVjNDJmNWM5NzdiMmIiLCJpYXQiOjE2MTgyMTEwNjl9.FXRRouqmRaDLEpgHtNCmTmTNP0Z_0RwhyVwUydgKlzs
+
+
+### @ PATCH OPEN LOCK ACOUNT
+PATCH http://localhost:4040/api/admin/open-acount/6073f0e6e9eaef2960bc5b04
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MDczMWJmMjJiODVjNDJmNWM5NzdiMmIiLCJpYXQiOjE2MTgyMTEwNjl9.FXRRouqmRaDLEpgHtNCmTmTNP0Z_0RwhyVwUydgKlzs
+
+### @ PATCH EXECUTED POSTS
+PATCH http://localhost:4040/api/admin/executed-post/60746552c383ae43c4e96d12
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MDczMWJmMjJiODVjNDJmNWM5NzdiMmIiLCJpYXQiOjE2MTgyNDQwMjR9.tFGmYpVFmALiiEmiV6hUhaIMfnKiNGWwHv4Q_-a5gxM
+
+### @ PATCH BLOCK POSTS
+PATCH  http://localhost:4040/api/admin/block-post/60746552c383ae43c4e96d12
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MDczMWJmMjJiODVjNDJmNWM5NzdiMmIiLCJpYXQiOjE2MTgyNDQwMjR9.tFGmYpVFmALiiEmiV6hUhaIMfnKiNGWwHv4Q_-a5gxM
+
+### @ DESTROY POST {role: 'admin'}
+DELETE http://localhost:4040/api/admin/destroy-post/60741769e680712df0e107e1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MDc0MTdhZGU2ODA3MTJkZjBlMTA3ZTIiLCJpYXQiOjE2MTgyNDQ3MzF9.1rSNhiYXbYd5K9xWkyz763-eR-gNcqSETIC4gc8nl7E
+
