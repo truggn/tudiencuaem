@@ -1,6 +1,7 @@
 require('dotenv').config()
 const express = require('express')
-const db = require('../server/config/db/db')
+const mongoose = require('mongoose')
+// const db = require('../server/config/db/db')
 
 
 const authRoute = require('../server/route/auth')
@@ -9,7 +10,14 @@ const adminRoute = require('../server/route/admin')
 const userRoute = require('../server/route/user')
 const cors = require('cors')
 
-db.connect()
+// db.connect()
+try {
+    const mongoose = require('mongoose')    
+    console.log("Connected Successfully to Database.");
+} catch (error) {
+    console.log(`Connect to db False  with Error ${error}`);
+}
+
 
 const app = express()
 app.use(express.json())
