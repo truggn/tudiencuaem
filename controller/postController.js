@@ -1,14 +1,29 @@
-const Post = require('../model/post')
-const User = require('../model/user')
-const PostSpecies = require('../model/postspecies')
-const multipleUploadMiddleware = require("../middleware/uploadFile");
+const Post = require('../model/posts')
+const User = require('../model/users')
+const TypePost = require('../model/typeposts')
 
 class postController {
 
     // Get POST
-    async getPosts(req, res) {
+    async homePosts(req, res) {
         try {
-            const posts = await Post.findOne({ user: req.userId }).populate('users', ['username'])
+            const perPage = 10;
+            const page = req.query.page || 1;
+            const posts = await Post.find()
+            .sort({createdAt:'desc'})
+            .where({isDeleted:false})
+            .populate({
+                path:'userId',
+                model:User,
+                select:'username'
+            })
+            .populate({
+                path:'typePostId',
+                model:TypePost,
+                select:'types icon'
+            })
+            .skip((perPage * page) - perPage)  // trong page dau tien bo qua gia tri 0
+            .limit(perPage)
             return res.status(200).json({
                 success: true,
                 data: posts,
@@ -19,27 +34,28 @@ class postController {
             console.log(error)
             return res.status(500).json({
                 success: false,
-                message: 'internal server Error'
+                message: error.message
             })
         }
     }
 
     // Create POST 
     async createPost(req, res) {
-
         const { title,
             description,
-            url,
-            status,
-            speciesId,
-            image,
-
+            typepostId
         } = req.body
 
         if (!title) {
             return res.status(400).json({
                 success: false,
-                message: "Vui lòng điền Tiêu đề bài đăng."
+                message: "Vui lòng điền tiêu đề."
+            })
+        }
+        if (title.includes('lồn') || title.includes('cặc')) {
+            return res.status(400).json({
+                success: false,
+                message: "Từ điển không hợp lệ."
             })
         }
         if (!description) {
@@ -48,46 +64,59 @@ class postController {
                 message: "Vui lòng điền nội dung bài đăng."
             })
         }
-        try {
-            const newPost = new Post({
-                title,
-                description,
-                url: (url.startsWith('https://')) ? url : `https://${url}`,
-                status: status || 'NOOP', // trạng thái chờ xác nhận [NOOP] , // Trạng thái đã xác nhận [OK]
-                userId: req.userId,
-                image
+        if (description.includes('lồn') || description.includes('cặc')) {
+            return res.status(400).json({
+                success: false,
+                message: "Nội dung không hợp lệ."
             })
-            const data = await newPost.save()
-
-            const species = await PostSpecies.findOne({ _id: speciesId })
-            if (!species) {
+        }
+        try {
+            const typePost = await TypePost.findOne({ _id: typepostId })
+            if (!typePost) {
                 return res.status(401).json({
                     success: false,
                     message: "Chưa chọn loại bài đăng?"
                 })
             }
-            data.speciesId.push(speciesId)
-            await data.save()
+            const newPost = new Post({
+                title,
+                description,
+                typePostId: typePost._id,
+                userId: req.userId
+            })
+            const data = await newPost.save()
             return res.status(200).json({
                 success: true,
                 data: data,
-                message: "Thành công. Hãy chờ xác nhận."
+                message: "Thành công."
             })
         } catch (error) {
             console.log(error)
             return res.status(500).json({
                 success: false,
-                message: "Hệ thống gặp lỗi!!!"
+                message: error.message
             })
         }
     }
     // PUT POSTS
-    async putPosts(req, res) {
-        const { title, description, url, image } = req.body
+    async updatePosts(req, res) {
+        const { title, description, typepostId} = req.body
         if (!title) {
             return res.status(400).json({
                 success: false,
                 message: "Vui lòng điền Tiêu đề Bài đăng."
+            })
+        }
+        if (title.includes('lồn')) {
+            return res.status(400).json({
+                success: false,
+                message: "tiêu đề không hợp lệ"
+            })
+        }
+        if (title.includes('cặc')) {
+            return res.status(400).json({
+                success: false,
+                message: "tiêu đề không hợp lệ"
             })
         }
         if (!description) {
@@ -96,17 +125,24 @@ class postController {
                 message: "Vui lòng thêm nội dung bài đăng."
             })
         }
+        if (description.includes('cặc')) {
+            return res.status(400).json({
+                success: false,
+                message: "Vui lòng thêm nội dung bài đăng."
+            })
+        }
+        if (description.includes('lồn')) {
+            return res.status(400).json({
+                success: false,
+                message: "Vui lòng thêm nội dung bài đăng."
+            })
+        }
         try {
-            let updatedPost = {
-                title,
-                description: description || '',
-                url: (url.startsWith('https://') ? url : `https://${url}`) || '',
-                image,
-                status: 'NOOP'
-            }
-            const postsUpdateCondition = { _id: req.params.id, userId: req.userId }
-            updatedPost = await Post.findOneAndUpdate(postsUpdateCondition, updatedPost, { new: true })
-
+           const updatedPost = await Post.findOneAndUpdate({ _id: req.params.id, userId: req.userId },
+                {title:title,
+                description:description,
+                typepostId:typepostId
+            }, { new: true })
             //check user , user authorised to update 
             if (!updatedPost) {
                 return res.status(401).json({
@@ -117,22 +153,24 @@ class postController {
             return res.status(200).json({
                 success: true,
                 data: updatedPost,
-                message: "Cập nhật bài đăng thành công. Vui lòng đợi admin duyệt bài."
+                message: "Cập nhật bài đăng thành công."
             })
         } catch (error) {
             console.log(error)
             return res.status(500).json({
                 success: false,
-                message: "Hệ thống gặp lỗi.!!!"
+                message: error.message
             })
         }
     }
     // DELETE POSTS
-    async destroyPosts(req, res) {
+    async deletePosts(req, res) {
         try {
-
-            let deletePost = await Post.findOneAndDelete({ _id: req.params.id, user: req.userId })
-
+            let deletePost = await Post.findOneAndUpdate(
+                { _id: req.params.id, userId: req.userId },
+                { isDeleted: true, },
+                { new: true }
+            )
             //check user , user authorised to delete 
             if (!deletePost) {
                 return res.status(401).json({
@@ -153,9 +191,9 @@ class postController {
         }
     }
     // POST createPostSpecies
-    async createPostSpecies(req, res) {
-        const { species, description } = req.body
-        if (!species) {
+    async createTypePost(req, res) {
+        const { types, icon } = req.body
+        if (!types) {
             return res.status(400).json({
                 success: false,
                 message: "Vui lòng điền tên loại bài đăng."
@@ -168,14 +206,15 @@ class postController {
                     success: false,
                     message: 'Bạn không có quyền thêm loại.'
                 })
-            } else {
-                const postSpecies = new PostSpecies({
-                    species,
-                    description,
+            }
+            else {
+                const typePost = new TypePost({
+                    types,
+                    icon,
                     user: req.userId
                 })
 
-                const data = await postSpecies.save()
+                const data = await typePost.save()
                 return res.status(200).json({
                     success: true,
                     data: data,
@@ -186,20 +225,51 @@ class postController {
             console.log(error)
             return res.status(500).json({
                 success: false,
-                message: "Hệ thống gặp lỗi.!!!"
+                message: error.message
             })
         }
 
     };
-    async getpostspecies(req, res) {
-        const { speciesId } = req.body
-        const data = await PostSpecies.findOne({})
+
+    // GET type
+    async getTypepost(req, res) {
+       try {
+           const data = await TypePost.find().select('-user')
+           if(data){
+               return res.status(200).json({
+                   data: data,
+                   message:'thành công'
+               })
+           }else{
+               return res.status(400).json({
+                   data: null,
+                   message:'thất bại'
+               })
+           }
+       } catch (error) {
+        console.log(error)
+        return res.status(500).json({
+            success: false,
+            message: error.message
+        })
+       }
     };
+
     // LOAD BÀI ĐĂNG THEO NGƯỜI ĐĂNG
     async loadPostsById(req, res, next) {
         try {
-            const result = await Post.findOne({ userId: req.userId })
-            console.log(result)
+            const perPage = 10;
+            const page = req.query.page || 1;
+            const result = await Post.find({ userId: req.userId })
+            .where({isDeleted:false})
+            .sort({createdAt:'desc'})
+            .populate({
+                path:'typePostId',
+                model:TypePost,
+                select:'types icon'
+            })
+            .skip((perPage * page) - perPage)  // trong page dau tien bo qua gia tri 0
+            .limit(perPage)
             if (!result) {
                 return res.status(200).json({
                     success: true,
@@ -218,10 +288,51 @@ class postController {
             console.log(error)
             return res.status(500).json({
                 success: false,
-                message: 'Lỗi khi tải bài đăng.'
+                message: error.message
             })
         }
-    }
-
+    };
+    // TẢI BÀI ĐĂNG THEO LOẠI
+    async postsBySpecies(req, res) {
+        try {
+            const perPage = 10;
+            const page = req.query.page || 1;
+            const data = await Post.find({ typePostId: req.params.id })
+            .where({isDeleted:false})
+            .sort({createdAt:'desc'})
+            .populate({
+                path:'userId',
+                model:User,
+                select:'username'
+            })
+            .populate({
+                path:'typePostId',
+                model:TypePost,
+                select:'types icon'
+            })
+            .skip((perPage * page) - perPage)  // trong page dau tien bo qua gia tri 0
+            .limit(perPage)
+            if (data) {
+                return res.status(200).json({
+                    success: true,
+                    data: data,
+                    message: 'Tải bài đăng thành công'
+                })
+            } else {
+                return res.status(401).json({
+                    success: false,
+                    data: null,
+                    message: 'Tải bài đăng thất bại'
+                })
+            }
+        } catch (error) {
+            console.log(error)
+            return res.status(500).json({
+                success: false,
+                data: null,
+                message: error.message
+            })
+        }
+    };
 }
 module.exports = new postController

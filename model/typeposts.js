@@ -1,12 +1,12 @@
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 
-const speciesPostSchema = new Schema({
-    species: {
+const TypePostSchema = new Schema({
+    types: {
         type: String,
         required: true,
     },
-    description: {
+    icon: {
         type: String,
     },
     user: {
@@ -16,8 +16,6 @@ const speciesPostSchema = new Schema({
     createAt: {
         type: Date,
         default: Date.now
-    },
-
-
+    }
 })
-module.exports = mongoose.model('speciespost', speciesPostSchema)
+module.exports = mongoose.model('typepost', TypePostSchema)

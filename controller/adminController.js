@@ -1,25 +1,27 @@
-
-const User = require('../model/user')
-const Posts = require('../model/post')
+const User = require('../model/users')
+const Posts = require('../model/posts')
 
 class adminController {
+
+    //[PUT] - LOCK ACCOUNT 
     async lockAcount(req, res) {
+        const idAccount = req.params.id
         try {
             // check requset , admin mới lock acount
             const checkRole = await User.findOne({ _id: req.userId })
             if (checkRole.roles !== 'admin') {
-                return res.status(400).json({
+                return res.status(401).json({
                     success: false,
                     message: 'Bạn không có quyền Khóa tài khoản.'
                 })
             } else {
-                let lockAcount = await User.findOneAndUpdate({ _id: req.params.id }, { isLockAcount: true }, { new: true })
+                let lockAcount = await User.findOneAndUpdate({ _id: idAccount }, { isLockAcount: true }, { new: true })
                 if (!lockAcount) {
-                    return res.status(400).json({
+                    return res.status(401).json({
                         success: false,
                         message: 'Khóa tài khoản này không thành công.!!!'
                     })
-                }
+                }                
                 return res.status(200).json({
                     success: true,
                     message: 'Khóa tài khoản này thành công.'
@@ -29,13 +31,14 @@ class adminController {
             console.log(error)
             return res.status(500).json({
                 success: false,
-                message: 'Hệ thống gặp lỗi.'
+                message: error.message
             })
         }
     };
 
     // @ MỞ TÀI KHOẢN 
     async openAcount(req, res, next) {
+        const idAccount = req.params.id
         try {
             // check requset , admin mới lock acount
             const checkRole = await User.findOne({ _id: req.userId })
@@ -45,7 +48,7 @@ class adminController {
                     message: 'Chỉ admin mới có quyền này.'
                 })
             } else {
-                let lockAcount = await User.findOneAndUpdate({ _id: req.params.id }, { isLockAcount: false }, { new: true })
+                let lockAcount = await User.findOneAndUpdate({ _id: idAccount }, { isLockAcount: false }, { new: true })
                 if (!lockAcount) {
                     return res.status(400).json({
                         success: false,
@@ -54,79 +57,20 @@ class adminController {
                 }
                 return res.status(200).json({
                     success: true,
-                    message: 'Mở khóa tài khoản này thành công.'
+                    message: 'Mở khóa tài khoản thành công.'
                 })
             }
         } catch (error) {
             console.log(error)
             return res.status(500).json({
                 success: false,
-                message: 'Hệ thống gặp lỗi.'
+                message: error.message
             })
         }
     };
-
-    // @PATCH EXECUTED POST
-    async executedPost(req, res) {
-        try {
-            const checkRole = await User.findOne({ _id: req.userId })
-            if (checkRole.roles !== 'admin') {
-                return res.status(400).json({
-                    success: false,
-                    message: 'Chỉ admin mới có quyền này.'
-                })
-            } else {
-                let executed = await Posts.findOneAndUpdate({ _id: req.params.id }, { status: 'OK' }, { new: true })
-                if (!executed) {
-                    return res.status(400).json({
-                        success: false,
-                        message: 'Không thể xác nhận.!!!'
-                    })
-                }
-                return res.status(200).json({
-                    success: true,
-                    message: 'Bài đăng đã cho phép được hoạt động.'
-                })
-            }
-        } catch (error) {
-            console.log(error)
-            return res.status(500).json({
-                success: false,
-                message: 'Hệ thống gặp lỗi.'
-            })
-        }
-    };
-    // @ PATCH BLOCK STATUS POSTS -> [NOOP]
-    async blockPosts(req, res) {
-        try {
-            const checkRole = await User.findOne({ _id: req.userId })
-            if (checkRole.roles !== 'admin') {
-                return res.status(400).json({
-                    success: false,
-                    message: 'Chỉ admin mới có quyền này.'
-                })
-            } else {
-                let executed = await Posts.findOneAndUpdate({ _id: req.params.id }, { status: 'NOOP' }, { new: true })
-                if (!executed) {
-                    return res.status(400).json({
-                        success: false,
-                        message: 'Không thể xác nhận.!!!'
-                    })
-                }
-                return res.status(200).json({
-                    success: true,
-                    message: 'Bài đăng đã cấm hoạt động.'
-                })
-            }
-        } catch (error) {
-            console.log(error)
-            return res.status(500).json({
-                success: false,
-                message: 'Hệ thống gặp lỗi.'
-            })
-        }
-    };
+    //[DELETE] bài đăng
     async destroyPosts(req, res) {
+        const idAccount = req.params.id
         try {
             const checkRole = await User.findOne({ _id: req.userId })
             if (checkRole.roles !== 'admin') {
@@ -135,7 +79,7 @@ class adminController {
                     message: 'Chỉ admin mới có quyền này.'
                 })
             } else {
-                const destroy = await Posts.deleteOne({ _id: req.params.id })
+                const destroy = await Posts.deleteOne({ _id: idAccount })
                 if (destroy) {
                     return res.status(200).json({
                         success: true,
@@ -151,7 +95,7 @@ class adminController {
         } catch (error) {
             return res.status(500).json({
                 success: false,
-                message: 'Hệ thống gặp lỗi.'
+                message: error.message
             })
         }
     }

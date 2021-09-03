@@ -6,7 +6,7 @@ const multer = require("multer");
 let storage = multer.diskStorage({
     // Định nghĩa nơi file upload sẽ được lưu lại
     destination: (req, file, callback) => {
-        callback(null, path.join(`${__dirname}/../../public/upload`));
+        callback(null, path.join(`${__dirname}./upload`));
     },
     filename: (req, file, callback) => {
         // ở đây các bạn có thể làm bất kỳ điều gì với cái file nhé.
@@ -17,13 +17,13 @@ let storage = multer.diskStorage({
             return callback(errorMess, null);
         }
         // Tên của file thì mình nối thêm một cái nhãn thời gian để tránh bị trùng tên file.
-        let filename = `${Date.now()}-trungquandev-${file.originalname}`;
+        let filename = `${Date.now()}-trungdev-${file.originalname}`;
         callback(null, filename);
     }
 });
 // Khởi tạo middleware uploadManyFiles với cấu hình như ở trên,
-// Bên trong hàm .array() truyền vào name của thẻ input, ở đây mình đặt là "many-files", và tham số thứ hai là giới hạn số file được phép upload mỗi lần, mình sẽ để là 17 (con số mà mình yêu thích). Các bạn thích để bao nhiêu cũng được.
-let uploadManyFiles = multer({ storage: storage }).array("many-files", 17);
+// Bên trong hàm .array() truyền vào name của thẻ input, ở đây mình đặt là "many-files", và tham số thứ hai là giới hạn số file được phép upload mỗi lần, mình sẽ để là 6 (con số mà mình yêu thích). Các bạn thích để bao nhiêu cũng được.
+let uploadManyFiles = multer({ storage: storage }).array("many-files", 6);
 // Mục đích của util.promisify() là để bên controller có thể dùng async-await để gọi tới middleware này
 let multipleUploadMiddleware = util.promisify(uploadManyFiles);
 module.exports = multipleUploadMiddleware;

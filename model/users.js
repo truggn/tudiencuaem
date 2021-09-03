@@ -8,6 +8,9 @@ const userSchema = new Schema({
         required: true,
         unique: true,
     },
+    avata: {
+        type: String
+    },
     email: {
         type: String,
         required: true,
@@ -17,9 +20,24 @@ const userSchema = new Schema({
         type: String,
         required: true,
     },
+    isPasswordFailure:{
+        type: Number,
+        default:0
+    },
     isLockAcount: {
         type: Boolean,
-        default: 'false' // neu tai khoan bi block -> reset isLockAcount is 'true'
+        default: false // neu tai khoan bi block -> reset isLockAcount is 'true'
+    },
+    active:{
+        type: Boolean,
+        default: false
+    },
+    codeActive:{
+        type:String
+    },
+    code:{
+        type: String,
+        default: null
     },
     // status: {
     //     type: Boolean,

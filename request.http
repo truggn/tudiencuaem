@@ -4,9 +4,10 @@ POST  http://localhost:4040/api/auth/register
 Content-Type: application/json
 
 {
-    "username":"hoa",
-    "email":"hoa@gmail.com",
-    "password":"hoa"
+    "username":"trungee",
+    "email":"truggnpoly@gmail.com",
+    "password":"thinh",
+    "avata":"trung.jpg"
 }
 
 
@@ -15,28 +16,29 @@ POST  http://localhost:4040/api/auth/login
 Content-Type: application/json
 
 {
-    "email":"hoa@gmail.com",
-    "password":"hoa"
+    "email":"admin@gmail.com",
+    "password":"admin"
 }
 
 ### POST Create posts
 POST http://localhost:4040/api/posts/create
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MDc0N2Q2ODVkZDk0YTNmZTQwZjNjZTQiLCJpYXQiOjE2MTgyNDcwMjl9.Jk5-vmCFL9wlORjbLZpoASKnf79RbaN66xwqBSkNj4o
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MDczMWJmMjJiODVjNDJmNWM5NzdiMmIiLCJpYXQiOjE2MTgzMjc4NjR9.aGUpwxyZn-A36As0CCNuyuN6WuwwY0JjzyKenYdqcI8
 
 
 {
-    "title":"JavaScript_hoa",
+    "title":"JavaScript_admin1",
     "description":"làm quen với Javascript",
     "url":"js.org.com",
+    "like":"10",
+    "view":"10",
     "image":"123.jpg",
-    "speciesId":["60702a33a30b0f265c92b4f2"]
+    "speciesId":["607070276b0c8702ac8bbfdf"]
    
 }
 
 ### GET POSTS
 GET http://localhost:4040/api/posts
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MDZmMmRhZWU2YWE2OTA3MDQyYWJlNWIiLCJpYXQiOjE2MTc4OTg5MzB9.tl2D9U5wRupRGJP6HJb4Glk8R0jb9pHzwuYrJt-LO30
 
 
 ### UPDATE POSTS
@@ -45,7 +47,7 @@ Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MDc0N2Q2ODVkZDk0YTNmZTQwZjNjZTQiLCJpYXQiOjE2MTgyNDcwMjl9.Jk5-vmCFL9wlORjbLZpoASKnf79RbaN66xwqBSkNj4o
 
 {
-    "title":"java111",
+    "title":"java1111112",
     "description":"java111",
     "url":"java.org.com",
     "image":"java.jpg",
@@ -56,8 +58,8 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MDc0N
 
 
 ### DELETE POSTS
-DELETE  http://localhost:4040/api/posts/606f2ddde6aa6907042abe5c
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MDZmMmRhZWU2YWE2OTA3MDQyYWJlNWIiLCJpYXQiOjE2MTc4OTg5MzB9.tl2D9U5wRupRGJP6HJb4Glk8R0jb9pHzwuYrJt-LO30
+PATCH   http://localhost:4040/api/posts/607502fd0b52743a241e9774
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MDc1MDJlMjBiNTI3NDNhMjQxZTk3NzMiLCJpYXQiOjE2MTgyODExOTh9.hPeLf4srX-h_esx4NEVP_Qe-EJFxSN3fwZ91Lngo3U8
 
 
 ### POST SPECIESPOST
@@ -86,8 +88,8 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MDZmM
 
 
 ### GET DATA BY USER 
-GET http://localhost:4040/api/posts/posts-by-user/607479c15dd94a3fe40f3ce2
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MDc0NzljMTVkZDk0YTNmZTQwZjNjZTIiLCJpYXQiOjE2MTgyNDYwOTR9.OauvKmOPI8HY2WEXoAcHAhUHF2WWjDWPYDV5ufWLR5M
+GET http://localhost:4040/api/posts/posts-by-user/607502e20b52743a241e9773
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MDc1MDJlMjBiNTI3NDNhMjQxZTk3NzMiLCJpYXQiOjE2MTgyODExOTh9.hPeLf4srX-h_esx4NEVP_Qe-EJFxSN3fwZ91Lngo3U8
 
 
 ### @ PATCH LOCK ACOUNT
@@ -113,3 +115,29 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MDczM
 DELETE http://localhost:4040/api/admin/destroy-post/60741769e680712df0e107e1
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MDc0MTdhZGU2ODA3MTJkZjBlMTA3ZTIiLCJpYXQiOjE2MTgyNDQ3MzF9.1rSNhiYXbYd5K9xWkyz763-eR-gNcqSETIC4gc8nl7E
 
+### GET DATA POST BY SPECIES
+GET http://localhost:4040/api/posts/species/607070276b0c8702ac8bbfdf
+
+### PATCH UPDATE PASSWORD USER
+PATCH http://localhost:4040/api/user/update-password
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MDc1MDJlMjBiNTI3NDNhMjQxZTk3NzMiLCJpYXQiOjE2MTgyODc0Mjh9.ubmsc6lQLwn7EJs10eYtW8nBN0kIqTp2_uhGuX7weKo
+
+{
+    "oldPassword":"thinddf",
+    "newPassword":"thinddfh"
+}
+
+### PUT UPDATE ACOUNT 
+PUT http://localhost:4040/api/user/update-acount
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MDc1MDJlMjBiNTI3NDNhMjQxZTk3NzMiLCJpYXQiOjE2MTgyOTAyNDh9.r8wL5oM91TtDzE9jvNv_02lyVdObibylrGMeqigPi18
+
+{
+    "username":"trung44444",
+    "avata":"trung.jpg"
+}
+
+### Confirm Account by Admin
+PUT  http://localhost:4040/api/admin/confirm-role/607effe668a50625043b07e2
+Authorization:  Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MDczMWJmMjJiODVjNDJmNWM5NzdiMmIiLCJpYXQiOjE2MTg5Mzc1NzR9.AsdYJLP7bKPjMD0MACKPwVh4Wmlv377jJWxPLogwCgk

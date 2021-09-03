@@ -1,5 +1,4 @@
 const jwt = require('jsonwebtoken')
-const _CONF = require('../config/secret')
 
 const verifyToken = (req, res, next) => {
     const authHeader = req.header('Authorization')
@@ -12,7 +11,7 @@ const verifyToken = (req, res, next) => {
         })
     }
     try {
-        const decoded = jwt.verify(token, _CONF.secret)// , { expiresIn: _CONF.tokenLife }
+        const decoded = jwt.verify(token, process.env.TOKEN_SECRET)// , { expiresIn: process.env.TOKEN_LIFE }
         req.userId = decoded.userId
         next()
     } catch (error) {

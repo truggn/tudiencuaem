@@ -2,12 +2,14 @@ const express = require('express')
 const userController = require('../controller/userController')
 const route = express.Router()
 const auth = require('../middleware/auth')
-const User = require('../model/user')
+const User = require('../model/users')
+const upload = require('../middleware/upload')
+
 
 // @route POST api/auth/register
 // @descri  Register user
 // @access public 
-route.post('/register', userController.createPost)
+route.post('/register', upload.single('avata'), userController.createAcount)
 
 // @route POST api/auth/login
 // @descri  login acount
