@@ -6,7 +6,7 @@ const auth = require('../middleware/auth')
 
 route.get('/', postController.homePosts)
 route.get('/by-type/:id', postController.postsBySpecies)
-// @POSTS 
+// @BAI DANG 
 route.post('/create', auth, postController.createPost)
 route.put('/update/:id', auth, postController.updatePosts)
 route.put('/delete/:id', auth, postController.deletePosts)
@@ -17,6 +17,9 @@ route.get('/type', postController.getTypepost)
 
 // @POST BY USER
 route.get('/by-user/:id', auth, postController.loadPostsById)
+
+//LIKE AND DISLIKE BAI DANG
+
 
 
 module.exports = route
