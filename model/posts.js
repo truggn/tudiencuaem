@@ -13,11 +13,11 @@ const postSchema = new Schema({
     },
     like: {
         type: Number,
-        default:0
+        default: 0
     },
-    dislike: {
+    disklike: {
         type: Number,
-        default:0
+        default: 0
     },
     comments: [{
         userId: {

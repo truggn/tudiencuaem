@@ -1,4 +1,3 @@
-
 const User = require('../model/users')
 const hashPasswordByArgon2 = require('argon2')
 const jwt = require('jsonwebtoken')
@@ -32,25 +31,30 @@ class userController {
 
     //@method POST [REGISTER Acount]
     async createAcount(req, res) {
+        const minTextInput = 3
+        const maxTextInput = 15
+        const TEXT1 =process.env.TEXT1
+        const TEXT2 =process.env.TEXT2
         const { username, email, password } = req.body
         const file_avata = req.file.path
         const htmlEmail = (codeactivate)=>{
             return ` 
            Cảm ơn bạn đã đồng hành cùng chúng tôi, mã code kích hoạt tài khoản của bạn là:${codeactivate}. Chúc bạn một ngày tốt lành. Happy Nice Day. `;
         };
-        if (!username) {
+
+        if(username.length <= minTextInput || username.length >= maxTextInput ){
             return res.status(400).json({
                 success: false,
-                message: "Vui lòng điền Username"
+                message: "username tối thiểu 3 và ít hơn 10 ký tự"
             })
         }
-        if (username.includes('cặc') || username.includes('lồn')) {
+        if (username.includes(TEXT1) || username.includes(TEXT2)) {
             return res.status(400).json({
                 success: false,
                 message: "tên người dùng không hợp lệ."
             })
         }
-        if (!email || !validator.isEmail(email)) {
+        if (!validator.isEmail(email)) {
             return res.status(400).json({
                 success: false,
                 message: "Email không hợp lệ."
@@ -112,7 +116,7 @@ class userController {
             let mailDetail = {
                 from: process.env.EMAIL,
                 to:email,
-                subject:`CHÀO MỪNG BẠN ĐẾN VỚI WEBSITE libaryforme.com`,
+                subject:`CHÀO MỪNG BẠN ĐẾN VỚI WEBSITE tudiencuaem.com`,
                 text:link
             };
             await mailTransposter.sendMail(mailDetail, (error, success)=>{
@@ -144,13 +148,13 @@ class userController {
         const htmlEmail = (code)=>{
             return `Mã code để thực hiện mở khóa tài khoản của bạn là:${code} `;
         };
-        if (!email) {
+        if (validator.isEmpty(email)) {
             return res.status(400).json({
                 success: false,
                 message: "Vui lòng nhập Email."
             })
         }
-        if (!password) {
+        if (validator.isEmpty(password)) {
             return res.status(400).json({
                 success: false,
                 message: "Vui lòng nhập Mật khẩu."
@@ -219,7 +223,7 @@ class userController {
                 })
             }
             else {
-                const token = jwt.sign({ userId: user._id, role: user.roles }, process.env.TOKEN_SECRET)// , { expiresIn: process.env.TOKEN_LIFE }
+                const token = jwt.sign({ userId: user._id, role: user.roles }, process.env.TOKEN_SECRET,{ expiresIn: process.env.TOKEN_LIFE })// , { expiresIn: process.env.TOKEN_LIFE }
                 user.token = token
                 await user.save()
                 await Login.create({
@@ -291,22 +295,20 @@ class userController {
 
     //@ method PUT -> [ UPDATE ACOUNT USER]
     async updateAcount(req, res) {
+        const minTextInput = 3
+        const maxTextInput = 15
+        const TEXT1 =process.env.TEXT1
+        const TEXT2 =process.env.TEXT2
         const {username} = req.body
         const file_avata = req.file.path
         // required
-        if (!username) {
+        if(username.length <= minTextInput || username.length >= maxTextInput ){
             return res.status(400).json({
                 success: false,
-                message: "Vui lòng điền username."
+                message: "username tối thiểu 3 và ít hơn 10 ký tự"
             })
         }
-        if (username.includes('lồn')) {
-            return res.status(400).json({
-                success: false,
-                message: "tên người dùng không hợp lệ"
-            })
-        }
-        if (username.includes('cặc')) {
+        if (username.includes(TEXT1) || username.includes(TEXT2) ) {
             return res.status(400).json({
                 success: false,
                 message: "tên người dùng không hợp lệ"
@@ -380,7 +382,5 @@ class userController {
             })
         }
     }
-
-
 }
 module.exports = new userController

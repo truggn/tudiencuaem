@@ -17,6 +17,7 @@ route.post('/register', upload.single('avata'), userController.createAcount)
 route.post('/login', userController.loginPage)
 
 
+
 //@route get api/auth 
 //@desc check if user is login
 //@access public 

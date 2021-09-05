@@ -10,6 +10,11 @@ route.get('/by-type/:id', postController.postsBySpecies)
 route.post('/create', auth, postController.createPost)
 route.put('/update/:id', auth, postController.updatePosts)
 route.put('/delete/:id', auth, postController.deletePosts)
+//@ COMMENT LIKE AND DISLIKE
+route.put('/like/:id',auth,postController.likepost)
+route.put('/disklike/:id',auth,postController.disklikepost)
+route.post('/comment/:id',auth,postController.commentpost)
+route.get('/comment/:id',postController.readcomment)
 
 // @LOAI BAI DANG
 route.post('/create-type', auth, postController.createTypePost)

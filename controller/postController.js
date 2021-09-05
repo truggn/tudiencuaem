@@ -1,13 +1,16 @@
 const Post = require('../model/posts')
 const User = require('../model/users')
 const TypePost = require('../model/typeposts')
-
+const Comment = require('../model/comment')
+const validator = require('validator')
+const TEXT1 = process.env.TEXT1
+const TEXT2 = process.env.TEXT2
 class postController {
 
     // Get POST
     async homePosts(req, res) {
         try {
-            const perPage = 10;
+            const perPage = 5;
             const page = req.query.page || 1;
             const posts = await Post.find()
             .sort({createdAt:'desc'})
@@ -20,7 +23,7 @@ class postController {
             .populate({
                 path:'typePostId',
                 model:TypePost,
-                select:'types icon'
+                select:'types'
             })
             .skip((perPage * page) - perPage)  // trong page dau tien bo qua gia tri 0
             .limit(perPage)
@@ -46,25 +49,31 @@ class postController {
             typepostId
         } = req.body
 
-        if (!title) {
+        if (validator.isEmpty(title)) {
             return res.status(400).json({
                 success: false,
                 message: "Vui lòng điền tiêu đề."
             })
         }
-        if (title.includes('lồn') || title.includes('cặc')) {
+        if(title.length > 30) {
+            return res.status(400).json({
+                success: false,
+                message: "tiêu đề giới hạn 30 ký tự."
+            })
+        }
+        if (title.includes(TEXT1) || title.includes(TEXT2)) {
             return res.status(400).json({
                 success: false,
                 message: "Từ điển không hợp lệ."
             })
         }
-        if (!description) {
+        if (validator.isEmpty(description)) {
             return res.status(400).json({
                 success: false,
                 message: "Vui lòng điền nội dung bài đăng."
             })
         }
-        if (description.includes('lồn') || description.includes('cặc')) {
+        if (description.includes(TEXT1) || description.includes(TEXT2)) {
             return res.status(400).json({
                 success: false,
                 message: "Nội dung không hợp lệ."
@@ -107,31 +116,19 @@ class postController {
                 message: "Vui lòng điền Tiêu đề Bài đăng."
             })
         }
-        if (title.includes('lồn')) {
+        if (title.includes(TEXT1) || title.includes(TEXT2)) {
             return res.status(400).json({
                 success: false,
                 message: "tiêu đề không hợp lệ"
             })
         }
-        if (title.includes('cặc')) {
-            return res.status(400).json({
-                success: false,
-                message: "tiêu đề không hợp lệ"
-            })
-        }
-        if (!description) {
+        if (validator.isEmpty(description)) {
             return res.status(400).json({
                 success: false,
                 message: "Vui lòng thêm nội dung bài đăng."
             })
         }
-        if (description.includes('cặc')) {
-            return res.status(400).json({
-                success: false,
-                message: "Vui lòng thêm nội dung bài đăng."
-            })
-        }
-        if (description.includes('lồn')) {
+        if (description.includes(TEXT1) ||description.includes(TEXT2)  ) {
             return res.status(400).json({
                 success: false,
                 message: "Vui lòng thêm nội dung bài đăng."
@@ -192,7 +189,7 @@ class postController {
     }
     // POST createPostSpecies
     async createTypePost(req, res) {
-        const { types, icon } = req.body
+        const { types } = req.body
         if (!types) {
             return res.status(400).json({
                 success: false,
@@ -210,7 +207,6 @@ class postController {
             else {
                 const typePost = new TypePost({
                     types,
-                    icon,
                     user: req.userId
                 })
 
@@ -266,7 +262,7 @@ class postController {
             .populate({
                 path:'typePostId',
                 model:TypePost,
-                select:'types icon'
+                select:'types'
             })
             .skip((perPage * page) - perPage)  // trong page dau tien bo qua gia tri 0
             .limit(perPage)
@@ -308,7 +304,7 @@ class postController {
             .populate({
                 path:'typePostId',
                 model:TypePost,
-                select:'types icon'
+                select:'types'
             })
             .skip((perPage * page) - perPage)  // trong page dau tien bo qua gia tri 0
             .limit(perPage)
@@ -334,5 +330,104 @@ class postController {
             })
         }
     };
+    //LIKE POST
+    async likepost(req, res){
+        try {
+        let data = await Post.findOne({_id: req.params.id})
+           await Post.updateMany({_id: req.params.id},{
+              $set: {like: data.like + 1}
+            },{new: true})
+            return res.status(200).json({
+                message:'like success'
+            })
+        } catch (error) {
+            return res.status(500).json({
+                success: false,
+                data: null,
+                message: error.message
+            })
+        }
+    };
+
+    // DISKLIKE POST
+    async disklikepost(req, res){
+        try {
+        let data = await Post.findOne({_id: req.params.id})
+           await Post.updateMany({_id: req.params.id},{
+              $set: {disklike: data.disklike + 1}
+            },{new: true})
+            return res.status(200).json({
+                message:'disklike success'
+            })
+        } catch (error) {
+            return res.status(500).json({
+                success: false,
+                data: null,
+                message: error.message
+            })
+        }
+    };
+    //COMMENT POST
+    async commentpost(req, res){
+        const {content} = req.body
+        if(content.length === 0) return res.status(400).json({
+            success: false,
+            message: 'không dùng từ ngữ bậy bạ'
+        })
+        if(content.includes(TEXT1) ||content.includes(TEXT2) ) return res.status(400).json({
+            success: false,
+            message: 'không dùng từ ngữ bậy bạ'
+        })
+        try {
+            const comment = new Comment({
+                content: content,
+                userId: req.userId,
+                postId: req.params.id
+            })
+            const savedata = await comment.save()
+            const data = await Comment.findOne({_id: savedata.id}).select('-postId').populate({
+                path:'userId',
+                model:User,
+                select:'username'
+            })
+            return res.status(200).json({
+                data: data,
+                success: true,
+                message:'ok'
+            })
+        } catch (error) {
+            return res.status(500).json({
+                success: false,
+                data: null,
+                message: error.message
+            })
+        }
+    };
+    // READ COMMENT POST
+    async readcomment(req, res){
+        try {
+            const perPage = 6;
+            const page = req.query.page || 1;
+            const data = await Comment.find({postId: req.params.id})
+            .select('-postId')
+            .sort({createdAt:'desc'})
+            .skip((perPage * page) - perPage)  // trong page dau tien bo qua gia tri 0
+            .limit(perPage)
+            .populate({
+                path:'userId',
+                model:User,
+                select:'username'
+            })
+            return res.status(200).json({
+                data: data
+            })
+        } catch (error) {
+            return res.status(500).json({
+                success: false,
+                data: null,
+                message: error.message
+            })
+        }
+    }
 }
 module.exports = new postController

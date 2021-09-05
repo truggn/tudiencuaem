@@ -7,11 +7,11 @@ const verifyToken = (req, res, next) => {
     if (!token) {
         return res.status(401).json({
             success: false,
-            message: ' Access token not found ! '
+            message: 'Access token not found! '
         })
     }
     try {
-        const decoded = jwt.verify(token, process.env.TOKEN_SECRET)// , { expiresIn: process.env.TOKEN_LIFE }
+        const decoded = jwt.verify(token, process.env.TOKEN_SECRET,{ expiresIn: process.env.TOKEN_LIFE })
         req.userId = decoded.userId
         next()
     } catch (error) {
